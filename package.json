@@ -1,0 +1,31 @@
+{
+  "name": "api_moodshop",
+  "version": "1.0.0",
+  "description": "API for app MoodShop, contain food, and drink item and anything like E-Commerce",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "API",
+    "BackEnd",
+    "MoodShop",
+    "E-Commerce"
+  ],
+  "author": "zaki",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.2.0",
+    "prettier": "^2.2.1"
+  }
+}
