@@ -40,13 +40,7 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      // const data = {
-      //   ...req.body,
-      // };
-      const data = req.body;
-      const id = data.id;
-      delete data.id;
-      const result = await model.update(data, id);
+      const result = await model.update(req.body);
       return response(res, 201, result);
     } catch (error) {
       return response(res, 500, error);

@@ -109,7 +109,7 @@ module.exports = {
     });
   },
 
-  update: (data, id) => {
+  update: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
         `UPDATE public.product SET 
@@ -120,11 +120,9 @@ module.exports = {
         WHERE id=${data.id}`,
       )
         .then((res) => {
-          console.log(res);
           resolve(data);
         })
         .catch((err) => {
-          console.log(err);
           reject(err);
         });
     });
