@@ -3,10 +3,10 @@ const db = require('../Configs/db');
 module.exports = {
   getAll: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM public.kategori ORDER BY id ASC')
+      db.query('SELECT * FROM public.category ORDER BY id ASC')
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table kategori');
+            resolve('tidak ada data di table category');
           } else {
             resolve(res.rows);
           }
@@ -20,11 +20,11 @@ module.exports = {
   getSearch: (nama) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT * FROM public.kategori WHERE nama LIKE '%${nama}%'`,
+        `SELECT * FROM public.category WHERE nama LIKE '%${nama}%'`,
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table kategori');
+            resolve('tidak ada data di table category');
           } else {
             resolve(res.rows);
           }
@@ -37,10 +37,10 @@ module.exports = {
 
   get: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM public.kategori WHERE id=${id}`)
+      db.query(`SELECT * FROM public.category WHERE id=${id}`)
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table kategori');
+            resolve('tidak ada data di table category');
           } else {
             resolve(res.rows);
           }
@@ -54,7 +54,7 @@ module.exports = {
   add: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO public.kategori(nama) VALUES('${data.nama}')`,
+        `INSERT INTO public.category(nama) VALUES('${data.nama}')`,
       )
         .then((res) => {
           resolve(data);
@@ -67,7 +67,7 @@ module.exports = {
 
   delete: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM public.kategori WHERE id=${id}`)
+      db.query(`DELETE FROM public.category WHERE id=${id}`)
         .then((res) => {
           resolve('data terhapus !');
         })
@@ -80,7 +80,7 @@ module.exports = {
   update: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE public.kategori SET nama='${data.nama}' WHERE id=${data.id}`,
+        `UPDATE public.category SET nama='${data.nama}' WHERE id=${data.id}`,
       )
         .then((res) => {
           resolve(data);

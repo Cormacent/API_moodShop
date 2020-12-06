@@ -1,4 +1,4 @@
-const model = require('../Models/Kategori');
+const model = require('../Models/Category');
 const response = require('../Helper/respon');
 
 module.exports = {

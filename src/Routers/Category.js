@@ -1,9 +1,9 @@
 const express = require('express');
 
 const routes = express.Router();
-const controler = require('../Controllers/Kategori');
+const controler = require('../Controllers/Category');
 
-// END POINT /kategori/
+// END POINT /category/
 routes.get('/', controler.getAll);
 routes.get('/:id', controler.get);
 routes.post('/', controler.add);

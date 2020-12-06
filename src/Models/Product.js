@@ -4,7 +4,7 @@ module.exports = {
   getAll: () => {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT product.id, product.nama, product.harga, product.gambar, kategori.nama AS kategori, product.tanggal FROM public.product LEFT JOIN public.kategori ON kategori.id = product.id_kategori ORDER BY product.id ASC',
+        'SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY product.id ASC',
       )
         .then((res) => {
           if (res.rows.length == 0) {
@@ -18,21 +18,20 @@ module.exports = {
         });
     });
   },
-  getSearch: (nama) => {
+  getSearch: (name) => {
     return new Promise((resolve, reject) => {
       db.query(
         `
           SELECT product.id,
-                  product.nama, 
-                  product.harga, 
-                  product.gambar, 
-                  kategori.nama AS kategori,
-                  product.tanggal
+                  product.name, 
+                  product.price, 
+                  product.image, 
+                  category.name AS category
           FROM public.product 
-          LEFT JOIN public.kategori 
-          ON kategori.id = product.id 
-          WHERE product.nama
-            LIKE '%${nama}%'
+          LEFT JOIN public.category 
+          ON category.id = product.id 
+          WHERE product.name
+            LIKE '%${name}%'
         `,
       )
         .then((res) => {
@@ -51,7 +50,7 @@ module.exports = {
   getSort: (order, sort) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT product.id, product.nama, product.harga, product.gambar, kategori.nama AS kategori, product.tanggal FROM public.product LEFT JOIN public.kategori ON kategori.id = product.id_kategori ORDER BY ${order} ${sort}`,
+        `SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY ${order} ${sort}`,
       )
         .then((res) => {
           if (res.rows.length == 0) {
@@ -69,7 +68,7 @@ module.exports = {
   get: (id) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT product.id, product.nama, product.harga, product.gambar, kategori.nama AS kategori, product.tanggal FROM public.product LEFT JOIN public.kategori ON kategori.id = product.id_kategori WHERE product.id=${id}`,
+        `SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category WHERE product.id=${id}`,
       )
         .then((res) => {
           if (res.rows.length == 0) {
@@ -86,13 +85,8 @@ module.exports = {
 
   add: (data) => {
     return new Promise((resolve, reject) => {
-      // JavaScript Date.now() returns the number of milliseconds since the Unix Epoch (1 Jan 1970). PostgreSQL to_timestamp(…) converts a single argument, interpreted as the number of seconds since the Unix Epoch into a PosgtreSQL timestamp. At some point, the JavaScript value needs to be divided by 1000.
       db.query(
-        `INSERT INTO public.product(nama, harga, gambar, id_kategori, tanggal) VALUES('${
-          data.nama
-        }',${data.harga}, '${data.gambar}', ${
-          data.id_kategori
-        }, to_timestamp(${Date.now()} / 1000.0))`,
+        `INSERT INTO public.product(name, price, image, id_category) VALUES('${data.name}',${data.price}, '${data.image}', ${data.id_category}`,
       )
         .then((res) => {
           resolve(data);
@@ -117,10 +111,14 @@ module.exports = {
 
   update: (data, id) => {
     return new Promise((resolve, reject) => {
-      // db.query(
-      //   `UPDATE public.product SET nama='${data.nama}', harga=${data.harga}, gambar='${data.gambar}', id_kategori=${data.id_kategori} WHERE id=${data.id}`,
-      // )
-      db.query(`UPDATE public.product SET ? WHERE ${id};`, data)
+      db.query(
+        `UPDATE public.product SET 
+            name='${data.name}', 
+            price=${data.price}, 
+            image='${data.image}', 
+            id_category=${data.id_category}
+        WHERE id=${data.id}`,
+      )
         .then((res) => {
           console.log(res);
           resolve(data);
