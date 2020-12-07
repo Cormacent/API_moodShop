@@ -86,7 +86,7 @@ module.exports = {
   add: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO public.product(name, price, image, id_category) VALUES('${data.name}',${data.price}, '${data.image}', ${data.id_category}`,
+        `INSERT INTO public.product(name, price, image, id_category) VALUES('${data.name}',${data.price}, '${data.image}', ${data.id_category})`,
       )
         .then((res) => {
           resolve(data);
@@ -114,7 +114,7 @@ module.exports = {
       db.query(
         `UPDATE public.product SET 
             name='${data.name}', 
-            price=${data.price}, 
+            price='${data.price}', 
             image='${data.image}', 
             id_category=${data.id_category}
         WHERE id=${data.id}`,

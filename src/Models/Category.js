@@ -17,10 +17,10 @@ module.exports = {
     });
   },
 
-  getSearch: (nama) => {
+  getSearch: (name) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT * FROM public.category WHERE nama LIKE '%${nama}%'`,
+        `SELECT * FROM public.category WHERE name LIKE '%${name}%'`,
       )
         .then((res) => {
           if (res.rows.length == 0) {
@@ -54,7 +54,7 @@ module.exports = {
   add: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO public.category(nama) VALUES('${data.nama}')`,
+        `INSERT INTO public.category(name) VALUES('${data.name}')`,
       )
         .then((res) => {
           resolve(data);
@@ -80,7 +80,7 @@ module.exports = {
   update: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE public.category SET nama='${data.nama}' WHERE id=${data.id}`,
+        `UPDATE public.category SET name='${data.name}' WHERE id=${data.id}`,
       )
         .then((res) => {
           resolve(data);
