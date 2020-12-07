@@ -20,7 +20,7 @@ module.exports = {
   getSearch: (name) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT * FROM public.category WHERE name LIKE '%${name}%'`,
+        `SELECT * FROM public.category WHERE name ILIKE '%${name}%'`,
       )
         .then((res) => {
           if (res.rows.length == 0) {

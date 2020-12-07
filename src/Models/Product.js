@@ -31,7 +31,7 @@ module.exports = {
           LEFT JOIN public.category 
           ON category.id = product.id 
           WHERE product.name
-            LIKE '%${name}%'
+            ILIKE '%${name}%'
         `,
       )
         .then((res) => {
