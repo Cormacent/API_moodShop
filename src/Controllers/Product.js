@@ -34,7 +34,7 @@ module.exports = {
       const result = await model.add(req.body);
       return response(res, 201, result);
     } catch (error) {
-      return response(err, 500, error);
+      return response(res, 500, error);
     }
   },
 
