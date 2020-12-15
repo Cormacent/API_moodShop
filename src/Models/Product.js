@@ -74,7 +74,7 @@ module.exports = {
           if (res.rows.length == 0) {
             resolve('tidak ada data di table product');
           } else {
-            resolve(res.rows);
+            resolve(res.rows[0]);
           }
         })
         .catch((err) => {
@@ -101,7 +101,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.query(`DELETE FROM public.product WHERE id=${id}`)
         .then((res) => {
-          resolve('data terhapus !');
+          resolve({ message: 'data terhapus !', status: res });
         })
         .catch((err) => {
           reject(err);

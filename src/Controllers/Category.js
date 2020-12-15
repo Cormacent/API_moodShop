@@ -28,6 +28,12 @@ module.exports = {
 
   add: async (req, res) => {
     try {
+      const data = req.body;
+      if (data.name === undefined) {
+        return response(res, 400, {
+          message: 'masukkan seluruh data dengan lengkap',
+        });
+      }
       const result = await model.add(req.body);
       return response(res, 201, result);
     } catch (error) {
@@ -37,6 +43,15 @@ module.exports = {
 
   update: async (req, res) => {
     try {
+      const dataDB = await model.get(req.body.id);
+      if (typeof dataDB === 'string') {
+        return response(res, 400, {
+          message: dataDB,
+        });
+      }
+      if (req.body.name === undefined) {
+        req.body.name = dataDB.name;
+      }
       const result = await model.update(req.body);
       return response(res, 201, result);
     } catch (error) {
@@ -44,9 +59,15 @@ module.exports = {
     }
   },
 
-  delete: (req, res) => {
+  delete: async (req, res) => {
     try {
-      const result = model.delete(req.params.id);
+      const dataDB = await model.get(req.params.id);
+      if (typeof dataDB === 'string') {
+        return response(res, 400, {
+          message: dataDB,
+        });
+      }
+      const result = await model.delete(req.params.id);
       return response(res, 200, result);
     } catch (error) {
       return response(res, 500, error);

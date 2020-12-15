@@ -42,7 +42,7 @@ module.exports = {
           if (res.rows.length == 0) {
             resolve('tidak ada data di table category');
           } else {
-            resolve(res.rows);
+            resolve(res.rows[0]);
           }
         })
         .catch((err) => {
