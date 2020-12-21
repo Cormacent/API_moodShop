@@ -1,11 +1,20 @@
 const response = require("../Helper/respon");
 const jwt = require("jsonwebtoken");
 const respon = require("../Helper/respon");
+const logger = require("../Configs/winston");
 
 const checkToken = (roles) => {
   return function (req, res, next) {
     const { authtoken } = req.headers;
     let flagToken = false;
+    if (authtoken === undefined) {
+      logger.error({
+        message: `header not set`,
+      });
+      return response(res, 501, {
+        message: "header not set",
+      });
+    }
     if (!authtoken) {
       logger.warn({
         message: "please login first!",

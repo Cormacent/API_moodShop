@@ -1,8 +1,9 @@
-const response = require('../Helper/respon');
-const { redisdb } = require('../Configs/redis');
+const response = require("../Helper/respon");
+const { redisdb } = require("../Configs/redis");
+
 module.exports = {
   getAllProduct: (req, res, next) => {
-    redisdb.get('products', (err, data) => {
+    redisdb.get("products", (err, data) => {
       if (err) {
         return response(res, 500, err);
       }
@@ -15,7 +16,7 @@ module.exports = {
     });
   },
   getAllHistory: (req, res, next) => {
-    redisdb.get('history', (err, data) => {
+    redisdb.get("history", (err, data) => {
       if (err) {
         return response(res, 500, err);
       }
@@ -28,7 +29,7 @@ module.exports = {
     });
   },
   getAllUsers: (req, res, next) => {
-    redisdb.get('users', (err, data) => {
+    redisdb.get("users", (err, data) => {
       if (err) {
         return response(res, 500, err);
       }
