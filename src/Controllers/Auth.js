@@ -17,6 +17,15 @@ class Auth {
       }
 
       const { password, email, role } = await model.getbyEmail(req.body.email);
+      if (email === undefined) {
+        logger.warn({
+          message: "email not registered",
+        });
+        return response(res, 400, {
+          message: "email not registered",
+        });
+      }
+
       const passUser = req.body.password;
       const check = await bcrypt.compare(passUser, password);
 
