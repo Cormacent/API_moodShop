@@ -6,7 +6,7 @@ module.exports = {
       db.query('SELECT * FROM public.history ORDER BY history.id ASC')
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table history');
+            resolve('No data in the history table');
           } else {
             resolve(res.rows);
           }
@@ -46,7 +46,7 @@ module.exports = {
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table history');
+            resolve('No data in the history table');
           } else {
             resolve(res.rows);
           }
@@ -62,7 +62,7 @@ module.exports = {
       db.query(`SELECT * FROM public.history WHERE history.id=${id}`)
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table history');
+            resolve('No data in the history table');
           } else {
             resolve(res.rows[0]);
           }
@@ -93,7 +93,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.query(`DELETE FROM public.history WHERE id=${id}`)
         .then((res) => {
-          resolve('data terhapus !');
+          resolve('Data is deleted !');
         })
         .catch((err) => {
           reject(err);

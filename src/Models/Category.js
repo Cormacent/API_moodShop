@@ -6,7 +6,7 @@ module.exports = {
       db.query('SELECT * FROM public.category ORDER BY id ASC')
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table category');
+            resolve('No data in the category table');
           } else {
             resolve(res.rows);
           }
@@ -24,7 +24,7 @@ module.exports = {
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table category');
+            resolve('No data in the category table');
           } else {
             resolve(res.rows);
           }
@@ -40,7 +40,7 @@ module.exports = {
       db.query(`SELECT * FROM public.category WHERE id=${id}`)
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table category');
+            resolve('No data in the category table');
           } else {
             resolve(res.rows[0]);
           }
@@ -69,7 +69,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.query(`DELETE FROM public.category WHERE id=${id}`)
         .then((res) => {
-          resolve('data terhapus !');
+          resolve('Data is deleted !');
         })
         .catch((err) => {
           reject(err);

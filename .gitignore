@@ -1,5 +1,7 @@
 node_modules
-.env
 package-lock.json
+access.log
+public
+.env
 .eslintrc
 .prettierrc

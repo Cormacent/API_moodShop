@@ -1,5 +1,6 @@
-const model = require('../Models/History');
-const response = require('../Helper/respon');
+const model = require("../Models/History");
+const response = require("../Helper/respon");
+const logger = require("../Configs/winston");
 
 module.exports = {
   getAll: async (req, res) => {
@@ -13,6 +14,7 @@ module.exports = {
       }
       return response(res, 200, result);
     } catch (error) {
+      logger.error(error.message);
       return response(res, 500, error);
     }
   },
@@ -22,6 +24,7 @@ module.exports = {
       const result = await model.get(req.params.id);
       return response(res, 200, result);
     } catch (error) {
+      logger.error(error.message);
       return response(res, 500, error);
     }
   },
@@ -36,14 +39,18 @@ module.exports = {
         data.cashier === undefined ||
         data.name_product === undefined
       ) {
+        logger.warn({
+          message: "please fill in all the data provided completely",
+        });
         return response(res, 400, {
-          message: 'masukkan seluruh data dengan lengkap',
+          message: "please fill in all the data provided completely",
         });
       }
 
       const result = await model.add(req.body);
       return response(res, 201, result);
     } catch (error) {
+      logger.error(error.message);
       return response(res, 500, error);
     }
   },
@@ -51,7 +58,10 @@ module.exports = {
   update: async (req, res) => {
     try {
       const dataDB = await model.get(req.body.id);
-      if (typeof dataDB === 'string') {
+      if (typeof dataDB === "string") {
+        logger.warn({
+          message: dataDB,
+        });
         return response(res, 400, {
           message: dataDB,
         });
@@ -74,6 +84,7 @@ module.exports = {
       const result = await model.update(req.body);
       return response(res, 201, result);
     } catch (error) {
+      logger.error(error.message);
       return response(res, 500, error);
     }
   },
@@ -81,7 +92,10 @@ module.exports = {
   delete: async (req, res) => {
     try {
       const dataDB = await model.get(req.params.id);
-      if (typeof dataDB === 'string') {
+      if (typeof dataDB === "string") {
+        logger.warn({
+          message: dataDB,
+        });
         return response(res, 400, {
           message: dataDB,
         });
@@ -89,6 +103,7 @@ module.exports = {
       const result = await model.delete(req.params.id);
       return response(res, 200, result);
     } catch (error) {
+      logger.error(error.message);
       return response(res, 500, error);
     }
   },

@@ -4,11 +4,11 @@ module.exports = {
   getAll: () => {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY product.id ASC',
+        'SELECT product.id, product.name, product.price, product.image, product.id_category, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY product.id ASC',
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table product');
+            resolve('No data in the product table');
           } else {
             resolve(res.rows);
           }
@@ -36,7 +36,7 @@ module.exports = {
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table product');
+            resolve('No data in the product table');
           } else {
             resolve(res.rows);
           }
@@ -54,7 +54,7 @@ module.exports = {
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table product');
+            resolve('No data in the product table');
           } else {
             resolve(res.rows);
           }
@@ -72,7 +72,7 @@ module.exports = {
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('tidak ada data di table product');
+            resolve('No data in the product table');
           } else {
             resolve(res.rows[0]);
           }
@@ -101,7 +101,10 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.query(`DELETE FROM public.product WHERE id=${id}`)
         .then((res) => {
-          resolve({ message: 'data terhapus !', status: res });
+          resolve({
+            command: res.command,
+            message: 'Data is deleted !',
+          });
         })
         .catch((err) => {
           reject(err);
