@@ -47,7 +47,7 @@ module.exports = {
         logger.warn({
           message: "please fill in all the data provided completely",
         });
-        return response(res, 400, {
+        return response(res, 200, {
           message: "please fill in all the data provided completely",
         });
       }
@@ -68,7 +68,7 @@ module.exports = {
         logger.warn({
           message: dataDB,
         });
-        return response(res, 400, {
+        return response(res, 200, {
           message: dataDB,
         });
       }
@@ -102,7 +102,7 @@ module.exports = {
         logger.warn({
           message: dataDB,
         });
-        return response(res, 400, {
+        return response(res, 200, {
           message: dataDB,
         });
       }

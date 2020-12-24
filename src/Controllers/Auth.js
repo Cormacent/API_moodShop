@@ -11,7 +11,7 @@ class Auth {
         logger.warn({
           message: "please fill in all the data provided completely",
         });
-        return response(res, 400, {
+        return response(res, 200, {
           message: "please fill in all the data provided completely",
         });
       }
@@ -21,7 +21,7 @@ class Auth {
         logger.warn({
           message: "email not registered",
         });
-        return response(res, 400, {
+        return response(res, 200, {
           message: "email not registered",
         });
       }
@@ -59,6 +59,7 @@ class Auth {
       const result = {
         message: "Token created",
         token: token,
+        role: role,
       };
       return result;
     } catch (error) {
