@@ -11,7 +11,7 @@ const checkToken = (roles) => {
       logger.error({
         message: `header not set`,
       });
-      return response(res, 501, {
+      return response(res, 200, {
         message: "header not set",
       });
     }
@@ -19,7 +19,7 @@ const checkToken = (roles) => {
       logger.warn({
         message: "please login first!",
       });
-      return response(res, 401, {
+      return response(res, 200, {
         message: "please login first!",
       });
     }
@@ -39,7 +39,7 @@ const checkToken = (roles) => {
         logger.warn({
           message: `You don't have permission to access`,
         });
-        return response(res, 401, {
+        return response(res, 200, {
           message: `You don't have permission to access`,
         });
       }
