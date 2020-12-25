@@ -8,11 +8,11 @@ const Users = require('./Routers/Users');
 const Auth = require('./Routers/Auth');
 const { cloudinaryConfig } = require('./Configs/cloudinary');
 
-routes.use('*', cloudinaryConfig);
-routes.use('/product', product);
-routes.use('/category', category);
-routes.use('/history', History);
-routes.use('/users', Users);
-routes.use('/auth', Auth);
+routes.use('/api/*', cloudinaryConfig);
+routes.use('/api/product', product);
+routes.use('/api/category', category);
+routes.use('/api/history', History);
+routes.use('/api/users', Users);
+routes.use('/api/auth', Auth);
 
 module.exports = routes;

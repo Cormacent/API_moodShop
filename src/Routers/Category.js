@@ -5,7 +5,7 @@ const controler = require("../Controllers/Category");
 const validate = require("../Middleware/Validate");
 
 // END POINT /category/
-routes.get("api/", validate(["admin", "customer"]), controler.getAll);
+routes.get("/", validate(["admin", "customer"]), controler.getAll);
 routes.get("/:id", validate(["admin", "customer"]), controler.get);
 routes.post("/", validate(["admin"]), controler.add);
 routes.put("/", validate(["admin"]), controler.update);
