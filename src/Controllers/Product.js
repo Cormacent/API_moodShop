@@ -6,19 +6,10 @@ const logger = require("../Configs/winston");
 
 module.exports = {
   getAll: async (req, res) => {
-    const { search } = req.query;
-    const { orderBy, sort } = req.query;
-    let result;
     try {
-      if (search) {
-        result = await model.getSearch(search);
-      } else if (orderBy) {
-        result = await model.getSort(orderBy, sort);
-      } else {
-        result = await model.getAll();
-        const saveToRedis = JSON.stringify(result);
-        redisdb.setex("products", 120, saveToRedis);
-      }
+      const result = await model.getAll();
+      const saveToRedis = JSON.stringify(result);
+      redisdb.setex("products", 120, saveToRedis);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);
@@ -29,6 +20,26 @@ module.exports = {
   get: async (req, res) => {
     try {
       const result = await model.get(req.params.id);
+      return response(res, 200, result);
+    } catch (error) {
+      logger.error(error.message);
+      return response(res, 500, error);
+    }
+  },
+
+  getSearch: async (req, res) => {
+    try {
+      const result = await model.getSearch(req.query);
+      return response(res, 200, result);
+    } catch (error) {
+      logger.error(error.message);
+      return response(res, 500, error);
+    }
+  },
+
+  getSort: async (req, res) => {
+    try {
+      const result = await model.getSort(req.query.orderBy, req.query.sort);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);

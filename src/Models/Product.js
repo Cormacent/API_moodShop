@@ -1,14 +1,23 @@
-const db = require('../Configs/db');
+const db = require("../Configs/db");
 
 module.exports = {
   getAll: () => {
     return new Promise((resolve, reject) => {
       db.query(
-        'SELECT product.id, product.name, product.price, product.image, product.id_category, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY product.id ASC',
+        `SELECT product.id,
+                 product.name, 
+                 product.price, 
+                 product.image, 
+                 product.id_category, 
+                 category.name AS category 
+          FROM public.product 
+            LEFT JOIN public.category 
+            ON category.id = product.id_category 
+          ORDER BY product.id DESC`
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('No data in the product table');
+            resolve("No data in the product table");
           } else {
             resolve(res.rows);
           }
@@ -18,25 +27,29 @@ module.exports = {
         });
     });
   },
-  getSearch: (name) => {
+  getSearch: (search) => {
+    console.log(Object.keys(search).toString());
+    console.log(Object.values(search).toString());
     return new Promise((resolve, reject) => {
       db.query(
-        `
-          SELECT product.id,
-                  product.name, 
-                  product.price, 
-                  product.image, 
-                  category.name AS category
+        `SELECT
+          product.id, 
+          product.name,
+          product.price, 
+          product.image, 
+          product.id_category, 
+          category.name AS category 
           FROM public.product 
-          LEFT JOIN public.category 
-          ON category.id = product.id 
-          WHERE product.name
-            ILIKE '%${name}%'
-        `,
+            LEFT JOIN public.category 
+            ON category.id = product.id_category
+          WHERE product.${Object.keys(search).toString()}
+            ILIKE '%${Object.values(search).toString()}%'
+          ORDER BY product.id DESC
+        `
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('No data in the product table');
+            resolve("No data in the product table");
           } else {
             resolve(res.rows);
           }
@@ -50,11 +63,11 @@ module.exports = {
   getSort: (order, sort) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY ${order} ${sort}`,
+        `SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY ${order} ${sort}`
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('No data in the product table');
+            resolve("No data in the product table");
           } else {
             resolve(res.rows);
           }
@@ -68,11 +81,11 @@ module.exports = {
   get: (id) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT product.id, product.name, product.price, product.image, product.id_category, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category WHERE product.id=${id}`,
+        `SELECT product.id, product.name, product.price, product.image, product.id_category, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category WHERE product.id=${id}`
       )
         .then((res) => {
           if (res.rows.length == 0) {
-            resolve('No data in the product table');
+            resolve("No data in the product table");
           } else {
             resolve(res.rows[0]);
           }
@@ -86,7 +99,7 @@ module.exports = {
   add: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO public.product(name, price, image, id_category) VALUES('${data.name}',${data.price}, '${data.image}', ${data.id_category})`,
+        `INSERT INTO public.product(name, price, image, id_category) VALUES('${data.name}',${data.price}, '${data.image}', ${data.id_category})`
       )
         .then((res) => {
           resolve(data);
@@ -103,7 +116,7 @@ module.exports = {
         .then((res) => {
           resolve({
             command: res.command,
-            message: 'Data is deleted !',
+            message: "Data is deleted !",
           });
         })
         .catch((err) => {
@@ -120,7 +133,7 @@ module.exports = {
             price='${data.price}', 
             image='${data.image}', 
             id_category=${data.id_category}
-        WHERE id=${data.id}`,
+        WHERE id=${data.id}`
       )
         .then((res) => {
           resolve(data);

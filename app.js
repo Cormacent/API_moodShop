@@ -15,7 +15,7 @@ server.use(bodyparser.json());
 server.use(morgan("short", { stream: logger.stream }));
 server.use(cors());
 server.use("/public", express.static("public"));
-server.use(routes);
+server.use("/api", routes);
 
 db.connect()
   .then((res) => {

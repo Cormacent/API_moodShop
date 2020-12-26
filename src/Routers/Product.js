@@ -13,6 +13,8 @@ routes.get(
   cache.getAllProduct,
   controler.getAll
 );
+routes.get("/search", validate(["admin", "customer"]), controler.getSearch);
+routes.get("/sort", validate(["admin", "customer"]), controler.getSort);
 routes.get("/:id", validate(["admin", "customer"]), controler.get);
 routes.post(
   "/",
