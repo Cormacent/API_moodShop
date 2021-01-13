@@ -1,122 +1,144 @@
-const db = require('../Configs/db');
+const db = require("../Configs/db");
+const Sequelize = require("sequelize");
 
-module.exports = {
-  getAll: () => {
+module.exports = new (class History {
+  constructor() {
+    this.History = db.sequelize.define("historys", {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      amount: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+      },
+      invoice: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      cashier: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
+      name_product: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+    });
+  }
+
+  async commit() {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM public.history ORDER BY history.id ASC')
+      if (process.env.MODE === "DEV") {
+        this.History.sync()
+          .then(() => {
+            resolve("Table historys Created!");
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      } else {
+        reject("You shall not pass");
+      }
+    });
+  }
+
+  async drop() {
+    return new Promise((resolve, reject) => {
+      if (process.env.MODE === "DEV") {
+        this.History.drop()
+          .then(() => {
+            resolve("Table historys Dropped!");
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      } else {
+        reject("You shall not pass");
+      }
+    });
+  }
+
+  async getAll() {
+    return new Promise((resolve, reject) => {
+      this.History.findAll({
+        order: [["id", "DESC"]],
+      })
         .then((res) => {
-          if (res.rows.length == 0) {
-            resolve('No data in the history table');
+          if (res.length > 0) {
+            resolve(res);
           } else {
-            resolve(res.rows);
+            resolve(null);
           }
         })
         .catch((err) => {
           reject(err);
         });
     });
-  },
-  getSearch: (invoice) => {
+  }
+
+  async getById(id) {
     return new Promise((resolve, reject) => {
-      db.query(
-        `
-          SELECT *
-          FROM public.history 
-          WHERE history.invoice
-            ILIKE '%${invoice}%'
-        `,
-      )
+      this.History.findOne({
+        where: {
+          id: id,
+        },
+        raw: true,
+      })
         .then((res) => {
-          if (res.rows.length == 0) {
-            resolve('tidak ada invoice di table history');
-          } else {
-            resolve(res.rows);
-          }
+          resolve(res);
         })
         .catch((err) => {
           reject(err);
         });
     });
-  },
+  }
 
-  getSort: (order, sort) => {
+  async add(data) {
     return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * FROM public.history ORDER BY ${order} ${sort}`,
-      )
-        .then((res) => {
-          if (res.rows.length == 0) {
-            resolve('No data in the history table');
-          } else {
-            resolve(res.rows);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  },
-
-  get: (id) => {
-    return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM public.history WHERE history.id=${id}`)
-        .then((res) => {
-          if (res.rows.length == 0) {
-            resolve('No data in the history table');
-          } else {
-            resolve(res.rows[0]);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  },
-
-  add: (data) => {
-    return new Promise((resolve, reject) => {
-      let date = new Date().toISOString().split('T')[0];
-      db.query(
-        `INSERT INTO public.history(amount, invoice, date, cashier, name_product) VALUES('${data.amount}','${data.invoice}', '${date}', '${data.cashier}', '${data.name_product}')`,
-      )
-        .then((res) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          console.log(err);
-          reject(err);
-        });
-    });
-  },
-
-  delete: (id) => {
-    return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM public.history WHERE id=${id}`)
-        .then((res) => {
-          resolve('Data is deleted !');
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  },
-
-  update: (data) => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `UPDATE public.history SET 
-          amount='${data.amount}', 
-          cashier='${data.cashier}', 
-          name_product='${data.name_product}', 
-          invoice=${data.invoice}
-        WHERE id=${data.id}`,
-      )
-        .then((res) => {
+      this.History.create(data)
+        .then(() => {
           resolve(data);
         })
         .catch((err) => {
           reject(err);
         });
     });
-  },
-};
+  }
+
+  async delete(id) {
+    return new Promise((resolve, reject) => {
+      this.History.destroy({
+        where: {
+          id: id,
+        },
+      })
+        .then(() => {
+          resolve("Data is deleted !");
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  async update(data) {
+    return new Promise((resolve, reject) => {
+      this.History.update(data, {
+        where: { id: id },
+      })
+        .then((res) => {
+          if (res == 0) {
+            reject(res);
+          } else {
+            resolve(res);
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+})();

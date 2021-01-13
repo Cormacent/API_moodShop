@@ -3,15 +3,28 @@ const response = require("../Helper/respon");
 const logger = require("../Configs/winston");
 
 module.exports = {
-  getAll: async (req, res) => {
-    const { search } = req.query;
-    let result;
+  commit: async (req, res) => {
     try {
-      if (search) {
-        result = await model.getSearch(search);
-      } else {
-        result = await model.getAll();
-      }
+      const result = await model.commit();
+      return response(res, 200, result);
+    } catch (error) {
+      return response(res, 500, error);
+    }
+  },
+
+  drop: async (req, res) => {
+    try {
+      const result = await model.drop();
+      return response(res, 200, result);
+    } catch (error) {
+      return response(res, 500, error);
+    }
+  },
+
+  getAll: async (req, res) => {
+    try {
+      const result = await model.getAll();
+      const saveToRedis = JSON.stringify(result);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);
@@ -19,9 +32,9 @@ module.exports = {
     }
   },
 
-  get: async (req, res) => {
+  getById: async (req, res) => {
     try {
-      const result = await model.get(req.params.id);
+      const result = await model.getById(req.params.id);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);
@@ -31,8 +44,7 @@ module.exports = {
 
   add: async (req, res) => {
     try {
-      const data = req.body;
-      if (data.name === undefined) {
+      if (!req.body.name) {
         logger.warn({
           message: "please fill in all the data provided completely",
         });
@@ -50,17 +62,23 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const dataDB = await model.get(req.body.id);
-      if (typeof dataDB === "string") {
+      console.log(req.body);
+      if (!req.body.id) {
         logger.warn({
-          message: dataDB,
+          message: "id not declare",
         });
         return response(res, 200, {
-          message: dataDB,
+          message: "id not declare",
         });
       }
-      if (req.body.name === undefined) {
-        req.body.name = dataDB.name;
+      const dataDB = await model.getById(req.body.id);
+      if (!dataDB) {
+        logger.warn({
+          message: "id not found!",
+        });
+        return response(res, 200, {
+          message: "id not found!",
+        });
       }
       const result = await model.update(req.body);
       return response(res, 201, result);
@@ -72,16 +90,24 @@ module.exports = {
 
   delete: async (req, res) => {
     try {
-      const dataDB = await model.get(req.params.id);
-      if (typeof dataDB === "string") {
+      if (!req.query.id) {
         logger.warn({
-          message: dataDB,
+          message: "id not declare",
         });
         return response(res, 200, {
-          message: dataDB,
+          message: "id not declare",
         });
       }
-      const result = await model.delete(req.params.id);
+      const dataDB = await model.getById(req.query.id);
+      if (!dataDB) {
+        logger.warn({
+          message: "id not found!",
+        });
+        return response(res, 200, {
+          message: "id not found!",
+        });
+      }
+      const result = await model.delete(req.query.id);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);

@@ -1,0 +1,31 @@
+### CREATE TABLE
+GET http://localhost:8089/api/users/commit
+
+### GET ALL USERS
+GET http://localhost:8089/api/users/
+
+
+### DELETE TABLE
+DELETE  http://localhost:8089/api/users/drop
+
+### INSERT NEW USER
+POST http://localhost:8089/api/users/
+Content-Type: application/json
+
+{
+    "name" : "zaki",
+    "email" : "zaki@gmail.com",
+    "password" : "maulana"
+}
+
+### UPDATE USER
+PUT  http://localhost:8089/api/users/
+Content-Type: application/json
+
+{
+    "name" : "maulana",
+    "email" : "mau@gmail.com",
+}
+
+### DELETE USER
+DELETE http://localhost:8089/api/users/?email=zaki@gmail.com

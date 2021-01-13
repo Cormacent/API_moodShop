@@ -1,121 +1,207 @@
 const db = require("../Configs/db");
+const Sequelize = require("sequelize");
+const { Op } = require("sequelize");
+const tb_category = require("./Category");
 
-module.exports = {
-  getAll: () => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT product.id,
-                 product.name, 
-                 product.price, 
-                 product.image, 
-                 product.id_category, 
-                 category.name AS category 
-          FROM public.product 
-            LEFT JOIN public.category 
-            ON category.id = product.id_category 
-          ORDER BY product.id DESC`
-      )
-        .then((res) => {
-          if (res.rows.length == 0) {
-            resolve("No data in the product table");
-          } else {
-            resolve(res.rows);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
+module.exports = new (class Product {
+  constructor() {
+    this.Product = db.sequelize.define("products", {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
+      price: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+      },
+      image: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      id_category: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "categorys",
+          key: "id",
+        },
+      },
     });
-  },
-  getSearch: (search) => {
-    console.log(Object.keys(search).toString());
-    console.log(Object.values(search).toString());
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT
-          product.id, 
-          product.name,
-          product.price, 
-          product.image, 
-          product.id_category, 
-          category.name AS category 
-          FROM public.product 
-            LEFT JOIN public.category 
-            ON category.id = product.id_category
-          WHERE product.${Object.keys(search).toString()}
-            ILIKE '%${Object.values(search).toString()}%'
-          ORDER BY product.id DESC
-        `
-      )
-        .then((res) => {
-          if (res.rows.length == 0) {
-            resolve("No data in the product table");
-          } else {
-            resolve(res.rows);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
+    this.Product.belongsTo(tb_category.Category, {
+      foreignKey: "id_category",
+      as: "categorys",
     });
-  },
+  }
 
-  getSort: (order, sort) => {
+  async commit() {
     return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT product.id, product.name, product.price, product.image, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category ORDER BY ${order} ${sort}`
-      )
-        .then((res) => {
-          if (res.rows.length == 0) {
-            resolve("No data in the product table");
-          } else {
-            resolve(res.rows);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      if (process.env.MODE === "DEV") {
+        this.Product.sync()
+          .then(() => {
+            resolve("Table Products Created!");
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      } else {
+        reject("You shall not pass");
+      }
     });
-  },
+  }
 
-  get: (id) => {
+  async drop() {
     return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT product.id, product.name, product.price, product.image, product.id_category, category.name AS category FROM public.product LEFT JOIN public.category ON category.id = product.id_category WHERE product.id=${id}`
-      )
-        .then((res) => {
-          if (res.rows.length == 0) {
-            resolve("No data in the product table");
-          } else {
-            resolve(res.rows[0]);
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      if (process.env.MODE === "DEV") {
+        this.Product.drop()
+          .then(() => {
+            resolve("Table Products Dropped!");
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      } else {
+        reject("You shall not pass");
+      }
     });
-  },
+  }
 
-  add: (data) => {
+  async add(data) {
     return new Promise((resolve, reject) => {
-      db.query(
-        `INSERT INTO public.product(name, price, image, id_category) VALUES('${data.name}',${data.price}, '${data.image}', ${data.id_category})`
-      )
-        .then((res) => {
+      this.Product.create(data)
+        .then(() => {
           resolve(data);
         })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
+
+  async getAll() {
+    return new Promise((resolve, reject) => {
+      this.Product.findAll({
+        raw: true,
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: tb_category.Category,
+            as: "categorys",
+          },
+        ],
+      })
+        .then((res) => {
+          if (res.length > 0) {
+            resolve(res);
+          } else {
+            resolve(null);
+          }
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
+
+  async getById(id) {
+    return new Promise((resolve, reject) => {
+      this.Product.findOne({
+        where: {
+          id: id,
+        },
+        raw: true,
+      })
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
+
+  async getSort(data) {
+    return new Promise((resolve, reject) => {
+      this.Product.findAll({
+        // VALUE IN ORDER MUST ARRAY EX: [ 'column', 'orderby']
+        order: [data],
+        raw: true,
+        include: [
+          {
+            model: tb_category.Category,
+            as: "categorys",
+          },
+        ],
+      })
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  }
+
+  async getSearch(data) {
+    const searchKey = Object.keys(data).toString();
+    const searchValue = Object.values(data).toString();
+    return new Promise((resolve, reject) => {
+      this.Product.findAll({
+        where: {
+          [searchKey]: {
+            [Op.iLike]: `%${searchValue}%`,
+          },
+        },
+        raw: true,
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: tb_category.Category,
+            as: "categorys",
+          },
+        ],
+      })
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((e) => {
+          if (e.parent.hint) {
+            reject(e.parent.hint);
+          } else {
+            reject(e);
+          }
+        });
+    });
+  }
+
+  async update(data) {
+    return new Promise((resolve, reject) => {
+      this.Product.update(data, { where: { id: data.id } })
+        .then((res) => {
+          if (res == 0) {
+            reject(res);
+          } else {
+            resolve(res);
+          }
+        })
         .catch((err) => {
           reject(err);
         });
     });
-  },
+  }
 
-  delete: (id) => {
+  async delete(id) {
     return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM public.product WHERE id=${id}`)
-        .then((res) => {
+      this.Product.destroy({
+        where: { id: id },
+      })
+        .then(() => {
           resolve({
-            command: res.command,
             message: "Data is deleted !",
           });
         })
@@ -123,24 +209,5 @@ module.exports = {
           reject(err);
         });
     });
-  },
-
-  update: (data) => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `UPDATE public.product SET 
-            name='${data.name}', 
-            price='${data.price}', 
-            image='${data.image}', 
-            id_category=${data.id_category}
-        WHERE id=${data.id}`
-      )
-        .then((res) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  },
-};
+  }
+})();

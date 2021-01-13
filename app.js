@@ -17,14 +17,16 @@ server.use(cors());
 server.use("/public", express.static("public"));
 server.use("/api", routes);
 
-db.connect()
-  .then((res) => {
-    console.log("Database Connected");
-  })
-  .catch((err) => {
-    console.log("Database Not Connected");
-    console.log(err);
-  });
+db.testConnection();
+
+// db.connect()
+//   .then((res) => {
+//     console.log("Database Connected");
+//   })
+//   .catch((err) => {
+//     console.log("Database Not Connected");
+//     console.log(err);
+//   });
 
 redis
   .redisCheck()

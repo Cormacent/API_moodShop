@@ -7,7 +7,7 @@ const logger = require("../Configs/winston");
 class Auth {
   login = async (req, res) => {
     try {
-      if (req.body.email === undefined || req.body.password === undefined) {
+      if (!req.body.email || !req.body.password) {
         logger.warn({
           message: "please fill in all the data provided completely",
         });
@@ -16,22 +16,27 @@ class Auth {
         });
       }
 
-      const { password, email, role } = await model.getbyEmail(req.body.email);
-      if (email === undefined) {
+      const fromDB = await model.getByEmail(req.body.email);
+      if (!fromDB) {
         logger.warn({
           message: "email not registered",
         });
         return response(res, 200, {
+          status: false,
           message: "email not registered",
         });
       }
 
       const passUser = req.body.password;
-      const check = await bcrypt.compare(passUser, password);
+      const check = await bcrypt.compare(passUser, fromDB.password);
 
       if (check) {
-        const result = await this.setToken(email, role);
-        return response(res, 200, { message: "You Pass!", result });
+        const result = await this.setToken(fromDB.email, fromDB.role);
+        return response(res, 200, {
+          status: true,
+          message: "You Pass!",
+          result,
+        });
       } else {
         logger.warn({
           message: "You shall not pass with that password!",
@@ -41,7 +46,7 @@ class Auth {
         });
       }
     } catch (error) {
-      logger.error(error.message);
+      logger.error(error);
       return response(res, 500, error);
     }
   };

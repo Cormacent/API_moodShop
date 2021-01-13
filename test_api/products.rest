@@ -1,0 +1,30 @@
+### CREATE TABLE
+GET http://localhost:8089/api/product/commit
+
+### DELETE TABLE
+DELETE  http://localhost:8089/api/product/drop
+
+### GET ALL PRODUCTS
+GET http://localhost:8089/api/product/
+
+### INSERT NEW PRODUCT
+POST http://localhost:8089/api/product/
+Content-Type: application/json
+
+{
+    "name" : "zaki",
+    "email" : "zaki@gmail.com",
+    "password" : "maulana"
+}
+
+### UPDATE PRODUCT
+PUT  http://localhost:8089/api/product/
+Content-Type: application/json
+
+{
+    "name" : "maulana",
+    "email" : "mau@gmail.com"
+}
+
+### DELETE PRODUCT
+DELETE http://localhost:8089/api/product/?email=zaki@gmail.com

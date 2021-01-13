@@ -5,6 +5,24 @@ const { redisdb } = require("../Configs/redis");
 const logger = require("../Configs/winston");
 
 module.exports = {
+  commit: async (req, res) => {
+    try {
+      const result = await model.commit();
+      return response(res, 200, result);
+    } catch (error) {
+      return response(res, 500, error);
+    }
+  },
+
+  drop: async (req, res) => {
+    try {
+      const result = await model.drop();
+      return response(res, 200, result);
+    } catch (error) {
+      return response(res, 500, error);
+    }
+  },
+
   getAll: async (req, res) => {
     try {
       const result = await model.getAll();
@@ -17,12 +35,12 @@ module.exports = {
     }
   },
 
-  get: async (req, res) => {
+  getById: async (req, res) => {
     try {
-      const result = await model.get(req.params.id);
+      const result = await model.getById(req.params.id);
       return response(res, 200, result);
     } catch (error) {
-      logger.error(error.message);
+      logger.error(error);
       return response(res, 500, error);
     }
   },
@@ -32,17 +50,17 @@ module.exports = {
       const result = await model.getSearch(req.query);
       return response(res, 200, result);
     } catch (error) {
-      logger.error(error.message);
+      logger.error(error);
       return response(res, 500, error);
     }
   },
 
   getSort: async (req, res) => {
     try {
-      const result = await model.getSort(req.query.orderBy, req.query.sort);
+      const result = await model.getSort([req.query.orderBy, req.query.sort]);
       return response(res, 200, result);
     } catch (error) {
-      logger.error(error.message);
+      logger.error(error);
       return response(res, 500, error);
     }
   },
@@ -50,10 +68,10 @@ module.exports = {
   add: async (req, res) => {
     try {
       if (
-        req.body.name === undefined ||
-        req.body.price === undefined ||
-        req.file === undefined ||
-        req.body.id_category === undefined
+        !req.body.name ||
+        !req.body.price ||
+        !req.file ||
+        !req.body.id_category
       ) {
         logger.warn({
           message: "please fill in all the data provided completely",
@@ -67,57 +85,63 @@ module.exports = {
       redisdb.del("products");
       return response(res, 201, result);
     } catch (error) {
-      logger.error(error.message);
+      logger.error(error);
       return response(res, 500, error);
     }
   },
 
   update: async (req, res) => {
     try {
-      const dataDB = await model.get(req.body.id);
-      if (typeof dataDB === "string") {
+      if (!req.body.id) {
         logger.warn({
-          message: dataDB,
+          message: "id not declare",
         });
         return response(res, 200, {
-          message: dataDB,
+          message: "id not declare",
         });
       }
-      if (req.body.price === undefined) {
-        req.body.price = dataDB.price;
+      const dataDB = await model.getById(req.body.id);
+      if (!dataDB) {
+        logger.warn({
+          message: "id not found!",
+        });
+        return response(res, 200, {
+          message: "id not found!",
+        });
       }
-      if (req.body.name === undefined) {
-        req.body.name = dataDB.name;
-      }
-      if (req.body.id_category === undefined) {
-        req.body.id_category = dataDB.id_category;
-      }
-      if (req.file === undefined) {
-        req.body.image = dataDB.image;
-      } else {
+      if (req.file) {
         req.body.image = await cloudUpload(req.file.path);
       }
+
       const result = await model.update(req.body);
       redisdb.del("products");
       return response(res, 201, result);
     } catch (error) {
-      logger.log(error.message);
+      logger.log(error);
       return response(res, 500, error);
     }
   },
 
   delete: async (req, res) => {
     try {
-      const dataDB = await model.get(req.params.id);
-      if (typeof dataDB === "string") {
+      if (!req.query.id) {
         logger.warn({
-          message: dataDB,
+          message: "id not declare",
         });
         return response(res, 200, {
-          message: dataDB,
+          message: "id not declare",
         });
       }
-      const result = await model.delete(req.params.id);
+      const dataDB = await model.getById(req.query.id);
+      if (!dataDB) {
+        logger.warn({
+          message: "id not found!",
+        });
+        return response(res, 200, {
+          message: "id not found!",
+        });
+      }
+      const result = await model.delete(req.query.id);
       redisdb.del("products");
       return response(res, 200, result);
     } catch (error) {

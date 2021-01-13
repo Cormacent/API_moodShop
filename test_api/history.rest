@@ -1,0 +1,31 @@
+### CREATE TABLE
+GET http://localhost:8089/api/history/commit
+
+### GET ALL HISTORYS
+GET http://localhost:8089/api/history/
+# authtoken:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdUBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MTAwMzQyNDUsImV4cCI6MTYxMDAzNzg0NX0.l_eLKevrZLt08UrZ1gwCNG5cg0zAP_9pm5j8MAvlTmw
+
+### DELETE TABLE
+DELETE  http://localhost:8089/api/history/drop
+
+### INSERT NEW PRODUCT
+POST http://localhost:8089/api/history/
+Content-Type: application/json
+
+{
+    "name" : "zaki",
+    "email" : "zaki@gmail.com",
+    "password" : "maulana"
+}
+
+### UPDATE PRODUCT
+PUT  http://localhost:8089/api/history/
+Content-Type: application/json
+
+{
+    "name" : "maulana",
+    "email" : "mau@gmail.com",
+}
+
+### DELETE PRODUCT
+DELETE http://localhost:8089/api/history/?email=zaki@gmail.com
