@@ -1,7 +1,6 @@
 const model = require("../Models/History");
 const response = require("../Helper/respon");
 const logger = require("../Configs/winston");
-const { redisdb } = require("../Configs/redis");
 
 module.exports = {
   commit: async (req, res) => {
@@ -25,8 +24,6 @@ module.exports = {
   getAll: async (req, res) => {
     try {
       const result = await model.getAll();
-      const saveToRedis = JSON.stringify(result);
-      redisdb.setex("historys", 120, saveToRedis);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error);
@@ -61,7 +58,6 @@ module.exports = {
       }
 
       const result = await model.add(req.body);
-      redisdb.del("historys");
       return response(res, 201, result);
     } catch (error) {
       logger.error(error);
@@ -89,7 +85,6 @@ module.exports = {
         });
       }
       const result = await model.update(req.body);
-      redisdb.del("historys");
       return response(res, 201, result);
     } catch (error) {
       logger.error(error.message);
@@ -117,7 +112,6 @@ module.exports = {
         });
       }
       const result = await model.delete(req.query.id);
-      redisdb.del("historys");
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);

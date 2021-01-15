@@ -24,7 +24,6 @@ module.exports = {
   getAll: async (req, res) => {
     try {
       const result = await model.getAll();
-      const saveToRedis = JSON.stringify(result);
       return response(res, 200, result);
     } catch (error) {
       logger.error(error.message);
