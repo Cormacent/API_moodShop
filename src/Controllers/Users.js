@@ -8,6 +8,26 @@ class Users {
   async commit(req, res) {
     try {
       const result = await model.commit();
+      if (result.result == "Table users Created!") {
+        const fromDB = await model.getByEmail(data.email);
+        if (fromDB) {
+          logger.warn({
+            message: "This email is already registered!",
+          });
+        } else {
+          const newPassword = await hashPassword("usertertinggi");
+          const data = {
+            name: "admin",
+            email: "admin@admin.com",
+            password: newPassword,
+            role: "admin",
+          };
+          await model.add(data);
+          logger.info({
+            message: "Highest user created successfully",
+          });
+        }
+      }
       return response(res, 200, result);
     } catch (error) {
       return response(res, 500, error);
@@ -37,7 +57,7 @@ class Users {
 
   async getByEmail(req, res) {
     try {
-      const result = await model.getByEmail();
+      const result = await model.getByEmail(req.body.email);
       const saveToRedis = JSON.stringify(result);
       redisdb.setex("users", 120, saveToRedis);
       return response(res, 200, result);
