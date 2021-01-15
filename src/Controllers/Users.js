@@ -8,8 +8,8 @@ class Users {
   async commit(req, res) {
     try {
       const result = await model.commit();
-      if (result.result == "Table users Created!") {
-        const fromDB = await model.getByEmail(data.email);
+      if (result == "Table users Created!") {
+        const fromDB = await model.getByEmail("admin@admin.com");
         if (fromDB) {
           logger.warn({
             message: "This email is already registered!",
