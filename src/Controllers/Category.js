@@ -61,7 +61,6 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      console.log(req.body);
       if (!req.body.id) {
         logger.warn({
           message: "id not declare",

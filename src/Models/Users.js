@@ -91,7 +91,6 @@ module.exports = new (class Users {
           resolve(res);
         })
         .catch((e) => {
-          console.log(e);
           reject(e);
         });
     });
@@ -104,7 +103,6 @@ module.exports = new (class Users {
           resolve(data);
         })
         .catch((e) => {
-          console.log(e);
           reject(e);
         });
     });

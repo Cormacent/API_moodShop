@@ -103,7 +103,6 @@ class Users {
       redisdb.del("users");
       return response(res, 201, result);
     } catch (error) {
-      console.log(error);
       logger.error(error);
       return response(res, 500, error);
     }

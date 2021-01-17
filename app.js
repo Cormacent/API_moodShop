@@ -19,15 +19,6 @@ server.use("/api", routes);
 
 db.testConnection();
 
-// db.connect()
-//   .then((res) => {
-//     console.log("Database Connected");
-//   })
-//   .catch((err) => {
-//     console.log("Database Not Connected");
-//     console.log(err);
-//   });
-
 redis
   .redisCheck()
   .then((res) => {
