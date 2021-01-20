@@ -8,7 +8,7 @@ const uploadFile = require("../Middleware/Multer");
 
 // CREATE DROP TABLE
 routes.get("/commit", controler.commit);
-routes.delete("/drop", controler.drop);
+routes.get("/drop", controler.drop);
 
 routes.get(
   "/",

@@ -6,7 +6,7 @@ const validate = require("../Middleware/Validate");
 
 // CREATE DROP TABLE
 routes.get("/commit", controler.commit);
-routes.delete("/drop", controler.drop);
+routes.get("/drop", controler.drop);
 
 routes.get("/", validate(["admin", "customer"]), controler.getAll);
 routes.get("/:id", validate(["admin", "customer"]), controler.getById);
