@@ -11,7 +11,7 @@ module.exports = new (class History {
         autoIncrement: true,
       },
       amount: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.DECIMAL,
         allowNull: false,
       },
       invoice: {
