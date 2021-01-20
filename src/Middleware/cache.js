@@ -15,8 +15,8 @@ module.exports = {
       }
     });
   },
-  getAllHistory: (req, res, next) => {
-    redisdb.get("history", (err, data) => {
+  getAllOrder: (req, res, next) => {
+    redisdb.get("orders", (err, data) => {
       if (err) {
         return response(res, 500, err);
       }

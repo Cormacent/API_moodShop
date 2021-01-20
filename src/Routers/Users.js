@@ -9,7 +9,10 @@ const validate = require("../Middleware/Validate");
 routes.get("/commit", controler.commit);
 routes.get  ("/drop", controler.drop);
 
-routes.get("/", validate(["admin"]), cache.getAllUsers, controler.getAll);
+routes.get("/", 
+// validate(["admin"]), 
+cache.getAllUsers,
+ controler.getAll);
 routes.post("/", controler.add);
 routes.put("/", validate(["admin"]), controler.update);
 routes.delete("/", validate(["admin"]), controler.delete);

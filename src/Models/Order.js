@@ -1,40 +1,59 @@
 const db = require("../Configs/db");
 const Sequelize = require("sequelize");
+const tb_users = require('./Users');
+const { fields } = require("../Middleware/Multer");
 
-module.exports = new (class History {
+module.exports = new (class Order {
   constructor() {
-    this.History = db.sequelize.define("historys", {
+    this.Order = db.sequelize.define("orders", {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      amount: {
+      id_user: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      },
+      price: {
         type: Sequelize.DECIMAL,
+        allowNull: false,
+      },
+      amount: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       invoice: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      cashier: {
-        type: Sequelize.STRING(50),
+      payment: {
+        type: Sequelize.STRING(5),
         allowNull: false,
       },
-      name_product: {
-        type: Sequelize.TEXT,
+      status: {
+        type: Sequelize.STRING(10),
+        // type: Sequelize.ENUM("unpaid", "prosess", "ready", "done"),
         allowNull: false,
       },
+    });
+    this.Order.belongsTo(tb_users.Users, {
+      foreignKey: "id_user",
+      as: "users",
     });
   }
 
   async commit() {
     return new Promise((resolve, reject) => {
       if (process.env.MODE === "DEV") {
-        this.History.sync()
+        this.Order.sync()
           .then(() => {
-            resolve("Table historys Created!");
+            resolve("Table Orders Created!");
           })
           .catch((e) => {
             reject(e);
@@ -48,9 +67,9 @@ module.exports = new (class History {
   async drop() {
     return new Promise((resolve, reject) => {
       if (process.env.MODE === "DEV") {
-        this.History.drop()
+        this.Order.drop()
           .then(() => {
-            resolve("Table historys Dropped!");
+            resolve("Table orders Dropped!");
           })
           .catch((e) => {
             reject(e);
@@ -63,8 +82,14 @@ module.exports = new (class History {
 
   async getAll() {
     return new Promise((resolve, reject) => {
-      this.History.findAll({
+      this.Order.findAll({
         order: [["id", "DESC"]],
+        include:[
+          {
+            model:tb_users.Users,
+            as:"users",
+          }
+        ]
       })
         .then((res) => {
           if (res.length > 0) {
@@ -79,9 +104,27 @@ module.exports = new (class History {
     });
   }
 
+  async getByIdUser(id) {
+    return new Promise((resolve, reject) => {
+      this.Order.findAll({
+        where: {
+          id_user: id,
+        },
+        raw: true,
+      })
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+
   async getById(id) {
     return new Promise((resolve, reject) => {
-      this.History.findOne({
+      this.Order.findOne({
         where: {
           id: id,
         },
@@ -98,9 +141,9 @@ module.exports = new (class History {
 
   async add(data) {
     return new Promise((resolve, reject) => {
-      this.History.create(data)
-        .then(() => {
-          resolve(data);
+      this.Order.create(data)
+        .then((res) => {
+          resolve(res);
         })
         .catch((err) => {
           reject(err);
@@ -110,7 +153,7 @@ module.exports = new (class History {
 
   async delete(id) {
     return new Promise((resolve, reject) => {
-      this.History.destroy({
+      this.Order.destroy({
         where: {
           id: id,
         },
@@ -126,7 +169,7 @@ module.exports = new (class History {
 
   async update(data) {
     return new Promise((resolve, reject) => {
-      this.History.update(data, {
+      this.Order.update(data, {
         where: { id: id },
       })
         .then((res) => {

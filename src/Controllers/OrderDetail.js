@@ -1,4 +1,4 @@
-const model = require("../Models/History");
+const model = require("../Models/OrderDetail");
 const response = require("../Helper/respon");
 const logger = require("../Configs/winston");
 
@@ -31,6 +31,16 @@ module.exports = {
     }
   },
 
+  getByIdOrder: async (req, res) => {
+    try {
+      const result = await model.getByIdOrder(req.query.id_order);
+      return response(res, 200, result);
+    } catch (error) {
+      logger.error(error.message);
+      return response(res, 500, error);
+    }
+  },
+
   getById: async (req, res) => {
     try {
       const result = await model.getById(req.params.id);
@@ -45,9 +55,9 @@ module.exports = {
     try {
       if (
         !req.body.amount ||
-        !req.body.invoice ||
-        !req.body.cashier ||
-        !req.body.name_product
+        !req.body.price ||
+        !req.body.id_product ||
+        !req.body.id_order
       ) {
         logger.warn({
           message: "please fill in all the data provided completely",
@@ -64,7 +74,6 @@ module.exports = {
       return response(res, 500, error);
     }
   },
-
   update: async (req, res) => {
     try {
       if (!req.body.id) {

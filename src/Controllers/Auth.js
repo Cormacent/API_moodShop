@@ -31,7 +31,7 @@ class Auth {
       const check = await bcrypt.compare(passUser, fromDB.password);
 
       if (check) {
-        const result = await this.setToken(fromDB.email, fromDB.role);
+        const result = await this.setToken(fromDB);
         return response(res, 200, {
           status: true,
           message: "You Pass!",
@@ -51,11 +51,11 @@ class Auth {
     }
   };
 
-  setToken = async (email, role) => {
+  setToken = async (data) => {
     try {
       const payload = {
-        email: email,
-        role: role,
+        email: data.email,
+        role: data.role,
       };
       const token = jwt.sign(payload, process.env.JWT_KEYS, {
         expiresIn: "1h",
@@ -64,7 +64,10 @@ class Auth {
       const result = {
         message: "Token created",
         token: token,
-        role: role,
+        role: data.role,
+        id: data.id,
+        email: data.email,
+        username: data.name,
       };
       return result;
     } catch (error) {
