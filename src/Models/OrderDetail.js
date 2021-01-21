@@ -1,11 +1,11 @@
-const db = require("../Configs/db");
-const Sequelize = require("sequelize");
-const tb_order = require("./Order");
-const tb_product = require("./Product");
+const db = require('../Configs/db');
+const Sequelize = require('sequelize');
+const tb_order = require('./Order');
+const tb_product = require('./Product');
 
 module.exports = new (class OrderDetail {
   constructor() {
-    this.OrderDetail = db.sequelize.define("orderdetails", {
+    this.OrderDetail = db.sequelize.define('orderdetails', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -16,16 +16,16 @@ module.exports = new (class OrderDetail {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "products",
-          key: "id",
+          model: 'products',
+          key: 'id',
         },
       },
       id_order: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "orders",
-          key: "id",
+          model: 'orders',
+          key: 'id',
         },
       },
       price: {
@@ -38,44 +38,44 @@ module.exports = new (class OrderDetail {
       },
     });
     this.OrderDetail.belongsTo(tb_product.Product, {
-      foreignKey: "id_product",
-      as: "products",
+      foreignKey: 'id_product',
+      as: 'products',
     });
     this.OrderDetail.belongsTo(tb_order.Order, {
-      foreignKey: "id_order",
-      as: "orders",
+      foreignKey: 'id_order',
+      as: 'orders',
     });
   }
 
   async commit() {
     return new Promise((resolve, reject) => {
-      if (process.env.MODE === "DEV") {
+      if (process.env.MODE === 'DEV') {
         this.OrderDetail.sync()
           .then(() => {
-            resolve("Table Orderdetails Created!");
+            resolve('Table Orderdetails Created!');
           })
           .catch((e) => {
             console.log(e);
             reject(e);
           });
       } else {
-        reject("You shall not pass");
+        reject('You shall not pass');
       }
     });
   }
 
   async drop() {
     return new Promise((resolve, reject) => {
-      if (process.env.MODE === "DEV") {
+      if (process.env.MODE === 'DEV') {
         this.OrderDetail.drop()
           .then(() => {
-            resolve("Table orderdetails Dropped!");
+            resolve('Table orderdetails Dropped!');
           })
           .catch((e) => {
             reject(e);
           });
       } else {
-        reject("You shall not pass");
+        reject('You shall not pass');
       }
     });
   }
@@ -83,7 +83,7 @@ module.exports = new (class OrderDetail {
   async getAll() {
     return new Promise((resolve, reject) => {
       this.OrderDetail.findAll({
-        order: [["id", "DESC"]],
+        order: [['id', 'DESC']],
       })
         .then((res) => {
           if (res.length > 0) {
@@ -125,7 +125,7 @@ module.exports = new (class OrderDetail {
         include: [
           {
             model: tb_product.Product,
-            as: "products",
+            as: 'products',
           },
         ],
       })
@@ -157,10 +157,15 @@ module.exports = new (class OrderDetail {
           id: id,
         },
       })
-        .then(() => {
-          resolve("Data is deleted !");
+        .then((res) => {
+          if (res == 0) {
+            resolve('No data with id : ' + id);
+          } else {
+            resolve('Data is deleted !');
+          }
         })
         .catch((err) => {
+          console.log(err);
           reject(err);
         });
     });

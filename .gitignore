@@ -2,5 +2,3 @@ node_modules
 access.log
 public
 .env
-.eslintrc
-.prettierrc

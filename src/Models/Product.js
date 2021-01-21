@@ -200,10 +200,12 @@ module.exports = new (class Product {
       this.Product.destroy({
         where: { id: id },
       })
-        .then(() => {
-          resolve({
-            message: "Data is deleted !",
-          });
+        .then((res) => {
+          if (res == 0) {
+            resolve('No data with id : ' + id);
+          } else {
+            resolve('Data is deleted !');
+          }
         })
         .catch((err) => {
           reject(err);

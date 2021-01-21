@@ -103,8 +103,12 @@ module.exports = new (class Category {
           id: id,
         },
       })
-        .then(() => {
-          resolve("Data is deleted !");
+        .then((res) => {
+          if (res == 0) {
+            resolve('No data with id : ' + id);
+          } else {
+            resolve('Data is deleted !');
+          }
         })
         .catch((err) => {
           reject(err);

@@ -141,15 +141,6 @@ class Users {
           message: "request rejected",
         });
       }
-      const dataDB = await model.getByEmail(req.query.email);
-      if (!dataDB) {
-        logger.warn({
-          message: "Cant find user!",
-        });
-        return response(res, 200, {
-          message: "Cant find user!",
-        });
-      }
       const result = await model.delete(req.query);
       redisdb.del("users");
       return response(res, 200, result);

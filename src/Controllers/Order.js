@@ -71,7 +71,7 @@ module.exports = {
         });
       }
       if (!req.body.status) {
-        req.body.status = "unpaid";
+        req.body.status = 1;
       }
 
       const result = await model.add(req.body);
@@ -117,15 +117,6 @@ module.exports = {
         });
         return response(res, 200, {
           message: "id not declare",
-        });
-      }
-      const dataDB = await model.getById(req.query.id);
-      if (!dataDB) {
-        logger.warn({
-          message: "id not found!",
-        });
-        return response(res, 200, {
-          message: "id not found!",
         });
       }
       const result = await model.delete(req.query.id);

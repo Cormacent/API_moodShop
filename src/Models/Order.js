@@ -37,8 +37,11 @@ module.exports = new (class Order {
         allowNull: false,
       },
       status: {
-        type: Sequelize.STRING(10),
-        // type: Sequelize.ENUM("unpaid", "prosess", "ready", "done"),
+        type: Sequelize.INTEGER,
+        // unpaid = 1
+        // prosess = 2
+        // ready = 3
+        // done = 4
         allowNull: false,
       },
     });
@@ -83,7 +86,7 @@ module.exports = new (class Order {
   async getAll() {
     return new Promise((resolve, reject) => {
       this.Order.findAll({
-        order: [["id", "DESC"]],
+        order: [["status", "ASC"]],
         include:[
           {
             model:tb_users.Users,
@@ -158,8 +161,12 @@ module.exports = new (class Order {
           id: id,
         },
       })
-        .then(() => {
-          resolve("Data is deleted !");
+        .then((res) => {
+          if (res == 0) {
+            resolve('No data with id : ' + id);
+          } else {
+            resolve('Data is deleted !');
+          }
         })
         .catch((err) => {
           reject(err);
@@ -170,7 +177,7 @@ module.exports = new (class Order {
   async update(data) {
     return new Promise((resolve, reject) => {
       this.Order.update(data, {
-        where: { id: id },
+        where: { id: data.id },
       })
         .then((res) => {
           if (res == 0) {

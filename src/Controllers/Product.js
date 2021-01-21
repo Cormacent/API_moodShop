@@ -132,15 +132,6 @@ module.exports = {
           message: "id not declare",
         });
       }
-      const dataDB = await model.getById(req.query.id);
-      if (!dataDB) {
-        logger.warn({
-          message: "id not found!",
-        });
-        return response(res, 200, {
-          message: "id not found!",
-        });
-      }
       const result = await model.delete(req.query.id);
       redisdb.del("products");
       return response(res, 200, result);

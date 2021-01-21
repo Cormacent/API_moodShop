@@ -33,4 +33,4 @@ Content-Type: application/json
 }
 
 ### DELETE PRODUCT
-DELETE http://localhost:8089/api/orderdetail/?email=zaki@gmail.com
+DELETE http://localhost:8089/api/orderdetail/?id=66

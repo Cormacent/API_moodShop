@@ -10,7 +10,7 @@ routes.get("/drop", controler.drop);
 
 routes.get(
   "/",
-   validate(["admin", "customer"]),
+  //  validate(["admin", "customer"]),
   controler.getAll
 );
 routes.get(
@@ -36,7 +36,7 @@ routes.put(
 );
 routes.delete(
   "/",
-  validate(["admin"]),
+  // validate(["admin"]),
   controler.delete
 );
 

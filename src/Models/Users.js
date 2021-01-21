@@ -130,10 +130,14 @@ module.exports = new (class Users {
         where: email,
       })
         .then((res) => {
-          resolve({
-            command: res.command,
-            message: "Data is deleted !",
-          });
+          if (res == 0) {
+            resolve('No data with id : ' + id);
+          } else {
+            resolve({
+              command: res.command,
+              message: "Data is deleted !",
+            });
+          }
         })
         .catch((err) => {
           reject(err);
