@@ -4,6 +4,11 @@ def builder
 
 pipeline{
     agent any
+
+    parameters {
+        choice(name: 'DEPLOY', choices: ['DEV','PROD'])
+    }
+
     stages{
         stage('Install Dependencies') { 
             steps {
@@ -36,22 +41,56 @@ pipeline{
             }
         }
         stage("Deploy to other server"){
-            steps{
-                script {
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'developer',
-                                verbose: false,
-                                transfers: [
-                                    sshTransfer(
-                                        execCommand: "docker pull ${image_name};",
-                                        execTimeout: 1200000
+            parallel {
+                stage("DEV"){
+                    when {
+                        expression {
+                            params.DEPLOY == "DEV"
+                        }
+                    }
+                    steps{
+                        script {
+                            sshPublisher(
+                                publishers: [
+                                    sshPublisherDesc(
+                                        configName: 'development',
+                                        verbose: false,
+                                        transfers: [
+                                            sshTransfer(
+                                                execCommand: "docker pull ${image_name};",
+                                                execTimeout: 1200000
+                                            )
+                                        ]
                                     )
                                 ]
                             )
-                        ]
-                    )
+                        }
+                    }
+                }
+                stage("PROD"){
+                    when {
+                        expression {
+                            params.DEPLOY == "PROD"
+                        }
+                    }
+                    steps{
+                        script {
+                            sshPublisher(
+                                publishers: [
+                                    sshPublisherDesc(
+                                        configName: 'production',
+                                        verbose: false,
+                                        transfers: [
+                                            sshTransfer(
+                                                execCommand: "docker pull ${image_name};",
+                                                execTimeout: 1200000
+                                            )
+                                        ]
+                                    )
+                                ]
+                            )
+                        }
+                    }
                 }
             }
         }
