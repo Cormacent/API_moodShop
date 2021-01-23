@@ -1,7 +1,7 @@
 const express = require("express");
 
 const routes = express.Router();
-const controler = require("../Controllers/OrderDetail");
+const controler = require("../Controllers/OrderItem");
 const validate = require("../Middleware/Validate");
 
 // CREATE DROP TABLE

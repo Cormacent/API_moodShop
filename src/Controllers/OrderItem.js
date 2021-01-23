@@ -1,4 +1,4 @@
-const model = require("../Models/OrderDetail");
+const model = require("../Models/OrderItem");
 const response = require("../Helper/respon");
 const logger = require("../Configs/winston");
 

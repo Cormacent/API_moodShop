@@ -1,20 +1,20 @@
 ### CREATE TABLE
-GET http://localhost:8089/api/orderdetail/commit
+GET http://localhost:8089/api/orderitem/commit
 
 ### GET ALL HISTORYS
-GET http://localhost:8089/api/orderdetail/
+GET http://localhost:8089/api/orderitem/
 # authtoken:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdUBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MTAwMzQyNDUsImV4cCI6MTYxMDAzNzg0NX0.l_eLKevrZLt08UrZ1gwCNG5cg0zAP_9pm5j8MAvlTmw
 
 ### DELETE TABLE
-DELETE  http://localhost:8089/api/orderdetail/drop
+DELETE  http://localhost:8089/api/orderitem/drop
 
 
 ### GET ALL HISTORYS
-GET http://localhost:8089/api/orderdetail/order?id_order=20
+GET http://localhost:8089/api/orderitem/order?id_order=20
 # authtoken:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hdUBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MTAwMzQyNDUsImV4cCI6MTYxMDAzNzg0NX0.l_eLKevrZLt08UrZ1gwCNG5cg0zAP_9pm5j8MAvlTmw
 
 ### INSERT NEW PRODUCT
-POST http://localhost:8089/api/orderdetail/
+POST http://localhost:8089/api/orderitem/
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### UPDATE PRODUCT
-PUT  http://localhost:8089/api/orderdetail/
+PUT  http://localhost:8089/api/orderitem/
 Content-Type: application/json
 
 {
@@ -33,4 +33,4 @@ Content-Type: application/json
 }
 
 ### DELETE PRODUCT
-DELETE http://localhost:8089/api/orderdetail/?id=66
+DELETE http://localhost:8089/api/orderitem/?id=66

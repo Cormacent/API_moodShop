@@ -3,9 +3,9 @@ const Sequelize = require('sequelize');
 const tb_order = require('./Order');
 const tb_product = require('./Product');
 
-module.exports = new (class OrderDetail {
+module.exports = new (class OrderItem {
   constructor() {
-    this.OrderDetail = db.sequelize.define('orderdetails', {
+    this.OrderItem = db.sequelize.define('orderitems', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -37,11 +37,11 @@ module.exports = new (class OrderDetail {
         allowNull: false,
       },
     });
-    this.OrderDetail.belongsTo(tb_product.Product, {
+    this.OrderItem.belongsTo(tb_product.Product, {
       foreignKey: 'id_product',
       as: 'products',
     });
-    this.OrderDetail.belongsTo(tb_order.Order, {
+    this.OrderItem.belongsTo(tb_order.Order, {
       foreignKey: 'id_order',
       as: 'orders',
     });
@@ -50,9 +50,9 @@ module.exports = new (class OrderDetail {
   async commit() {
     return new Promise((resolve, reject) => {
       if (process.env.MODE === 'DEV') {
-        this.OrderDetail.sync()
+        this.OrderItem.sync()
           .then(() => {
-            resolve('Table Orderdetails Created!');
+            resolve('Table Order Item Created!');
           })
           .catch((e) => {
             console.log(e);
@@ -67,9 +67,9 @@ module.exports = new (class OrderDetail {
   async drop() {
     return new Promise((resolve, reject) => {
       if (process.env.MODE === 'DEV') {
-        this.OrderDetail.drop()
+        this.OrderItem.drop()
           .then(() => {
-            resolve('Table orderdetails Dropped!');
+            resolve('Table orderitems Dropped!');
           })
           .catch((e) => {
             reject(e);
@@ -82,7 +82,7 @@ module.exports = new (class OrderDetail {
 
   async getAll() {
     return new Promise((resolve, reject) => {
-      this.OrderDetail.findAll({
+      this.OrderItem.findAll({
         order: [['id', 'DESC']],
       })
         .then((res) => {
@@ -100,7 +100,7 @@ module.exports = new (class OrderDetail {
 
   async getById(id) {
     return new Promise((resolve, reject) => {
-      this.OrderDetail.findOne({
+      this.OrderItem.findOne({
         where: {
           id: id,
         },
@@ -117,7 +117,7 @@ module.exports = new (class OrderDetail {
 
   async getByIdOrder(id) {
     return new Promise((resolve, reject) => {
-      this.OrderDetail.findAll({
+      this.OrderItem.findAll({
         where: {
           id_order: id,
         },
@@ -140,7 +140,7 @@ module.exports = new (class OrderDetail {
 
   async add(data) {
     return new Promise((resolve, reject) => {
-      this.OrderDetail.create(data)
+      this.OrderItem.create(data)
         .then(() => {
           resolve(data);
         })
@@ -152,7 +152,7 @@ module.exports = new (class OrderDetail {
 
   async delete(id) {
     return new Promise((resolve, reject) => {
-      this.OrderDetail.destroy({
+      this.OrderItem.destroy({
         where: {
           id: id,
         },
@@ -173,7 +173,7 @@ module.exports = new (class OrderDetail {
 
   async update(data) {
     return new Promise((resolve, reject) => {
-      this.OrderDetail.update(data, {
+      this.OrderItem.update(data, {
         where: { id: id },
       })
         .then((res) => {
