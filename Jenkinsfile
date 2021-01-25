@@ -13,24 +13,44 @@ pipeline{
         stage('Install Dependencies') { 
             steps {
                 nodejs('node14npm') {
-                     sh 'npm install'
+                    sh 'npm install'
+                    sh 'printf "MODE=DEV\
+                        \nDB_HOST=postgres\
+                        \nDB_USER=cormac\
+                        \nDB_PASS=c0b4d1b4c4\
+                        \nDB_DATABASE=moodshop\
+                        \nDB_PORT=5432\
+
+                        \n\n# REDIS\
+                        \nREDIS_HOST=redis\
+                        \nREDIS_PORT=6379\
+                        \nREDIS_PASS=c0b4d1b4c4\
+
+                        \n\n# JWT\
+                        \nJWT_KEYS=rahasiakuterbongkarsudah\
+
+                        \n\n# CLOUDINARY\
+                        \nCLOUD_KEY=676327326565441\
+                        \nCLOUD_SECRET=A4FazLHEsU2TArM4oWcjVxSJZM4\
+                        \nCLOUD_NAME=devops-engineer\
+                        \nCLOUD_ENV=cloudinary://676327326565441:A4FazLHEsU2TArM4oWcjVxSJZM4@devops-engineer" > .env'
                 }   
             }
         }
         stage('build docker image') { 
              steps {
                  script {
-                     builder = docker.build(image_name, "--no-cache .")
+                    builder = docker.build(image_name, "--no-cache .")
                  }
             }
         }
         stage('test docker image') { 
              steps {
                  script {
-                     sh 'docker rmi \$(docker images -f "dangling=true" -q)'
-                     builder.inside {
-                         sh 'echo passed'
-                     }
+                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
+                    builder.inside {
+                        sh 'echo passed'
+                    }
                  }
             }
         }
