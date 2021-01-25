@@ -20,15 +20,12 @@ pipeline{
                         \nDB_PASS=c0b4d1b4c4\
                         \nDB_DATABASE=moodshop\
                         \nDB_PORT=5432\
-
                         \n\n# REDIS\
                         \nREDIS_HOST=redis\
                         \nREDIS_PORT=6379\
                         \nREDIS_PASS=c0b4d1b4c4\
-
                         \n\n# JWT\
                         \nJWT_KEYS=rahasiakuterbongkarsudah\
-
                         \n\n# CLOUDINARY\
                         \nCLOUD_KEY=676327326565441\
                         \nCLOUD_SECRET=A4FazLHEsU2TArM4oWcjVxSJZM4\
