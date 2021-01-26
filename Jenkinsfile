@@ -75,7 +75,7 @@ pipeline{
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                execCommand: "docker pull ${image_name};",
+                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q)",
                                                 execTimeout: 1200000
                                             )
                                         ]
@@ -100,7 +100,7 @@ pipeline{
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                execCommand: "docker pull ${image_name};",
+                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q)",
                                                 execTimeout: 1200000
                                             )
                                         ]
