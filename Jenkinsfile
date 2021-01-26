@@ -41,10 +41,16 @@ pipeline{
                  }
             }
         }
+        stage("remove unused docker image"){
+            steps{
+                script {
+                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
+                }
+            }
+        }
         stage('test docker image') { 
              steps {
                  script {
-                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
                     builder.inside {
                         sh 'echo passed'
                     }
@@ -75,7 +81,7 @@ pipeline{
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q)",
+                                                execCommand: "docker pull ${image_name}; cd /home/developer/app; docker-compose down; docker rmi \$(docker images -f 'dangling=true' -q)",
                                                 execTimeout: 1200000
                                             )
                                         ]
@@ -100,7 +106,7 @@ pipeline{
                                         verbose: false,
                                         transfers: [
                                             sshTransfer(
-                                                execCommand: "docker pull ${image_name}; docker rmi \$(docker images -f 'dangling=true' -q)",
+                                                execCommand: "docker pull ${image_name}; cd /home/production/app; docker-compose down; docker rmi \$(docker images -f 'dangling=true' -q)",
                                                 execTimeout: 1200000
                                             )
                                         ]
