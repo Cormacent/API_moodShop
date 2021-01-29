@@ -15,13 +15,13 @@ pipeline{
                 nodejs('node14npm') {
                     sh 'npm install'
                     sh 'printf "MODE=DEV\
-                        \nDB_HOST=postgres\
+                        \nDB_HOST=54.227.229.162\
                         \nDB_USER=cormac\
                         \nDB_PASS=c0b4d1b4c4\
                         \nDB_DATABASE=moodshop\
                         \nDB_PORT=5432\
                         \n\n# REDIS\
-                        \nREDIS_HOST=redis\
+                        \nREDIS_HOST=54.227.229.162\
                         \nREDIS_PORT=6379\
                         \nREDIS_PASS=c0b4d1b4c4\
                         \n\n# JWT\
