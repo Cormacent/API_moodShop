@@ -44,7 +44,7 @@ pipeline{
         stage("remove unused docker image"){
             steps{
                 script {
-                    sh 'docker rmi \$(docker images -f "dangling=true" -q)'
+                    sh 'docker rmi -f \$(docker images -f "dangling=true" -q)'
                 }
             }
         }
@@ -78,7 +78,7 @@ pipeline{
                                 publishers: [
                                     sshPublisherDesc(
                                         configName: 'development',
-                                        verbose: false,
+                                        verbose: true,
                                         transfers: [
                                             sshTransfer(
                                                 execCommand: "docker pull ${image_name}; cd /home/developer/app; docker-compose down; docker rmi -f \$(docker images -f 'dangling=true' -q)",
@@ -103,7 +103,7 @@ pipeline{
                                 publishers: [
                                     sshPublisherDesc(
                                         configName: 'production',
-                                        verbose: false,
+                                        verbose: true,
                                         transfers: [
                                             sshTransfer(
                                                 execCommand: "docker pull ${image_name}; cd /home/production/app; docker-compose down; docker rmi -f \$(docker images -f 'dangling=true' -q)",

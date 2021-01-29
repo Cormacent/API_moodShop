@@ -16,6 +16,10 @@ server.use(morgan("short", { stream: logger.stream }));
 server.use(cors());
 server.use("/public", express.static("public"));
 server.use("/api", routes);
+server.get("/health",(req,res)=>{
+
+  res.send("I am very healthy")
+})
 
 db.testConnection();
 
