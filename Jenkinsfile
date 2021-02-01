@@ -64,59 +64,5 @@ pipeline{
                 }
             }
         }
-        // stage("Deploy to other server"){
-        //     parallel {
-        //         stage("DEV"){
-        //             when {
-        //                 expression {
-        //                     params.DEPLOY == "DEV"
-        //                 }
-        //             }
-        //             steps{
-        //                 script {
-        //                     sshPublisher(
-        //                         publishers: [
-        //                             sshPublisherDesc(
-        //                                 configName: 'development',
-        //                                 verbose: true,
-        //                                 transfers: [
-        //                                     sshTransfer(
-        //                                         execCommand: "docker pull ${image_name}; cd /home/developer/app; docker-compose down; docker rmi -f \$(docker images -f 'dangling=true' -q)",
-        //                                         execTimeout: 1200000
-        //                                     )
-        //                                 ]
-        //                             )
-        //                         ]
-        //                     )
-        //                 }
-        //             }
-        //         }
-        //         stage("PROD"){
-        //             when {
-        //                 expression {
-        //                     params.DEPLOY == "PROD"
-        //                 }
-        //             }
-        //             steps{
-        //                 script {
-        //                     sshPublisher(
-        //                         publishers: [
-        //                             sshPublisherDesc(
-        //                                 configName: 'production',
-        //                                 verbose: true,
-        //                                 transfers: [
-        //                                     sshTransfer(
-        //                                         execCommand: "docker pull ${image_name}; cd /home/production/app; docker-compose down; docker rmi -f \$(docker images -f 'dangling=true' -q)",
-        //                                         execTimeout: 1200000
-        //                                     )
-        //                                 ]
-        //                             )
-        //                         ]
-        //                     )
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
 }
