@@ -8,7 +8,7 @@ pipeline{
     stages{
         stage('Install Dependencies') { 
             steps {
-                nodejs('node14npm') {
+                nodejs('node14') {
                     sh 'npm install'
                 }   
             }
