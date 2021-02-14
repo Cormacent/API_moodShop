@@ -30,9 +30,17 @@ pipeline{
             }
         }
         stage('Push Image to Registries') { 
+            // steps {
+            //     script {
+            //         builder.push()
+            //     }
+            // }
             steps {
-                script {
-                    builder.push()
+                node {
+                    checkout scm
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-creds-zaki') {
+                        builder.push()
+                    }
                 }
             }
         }
