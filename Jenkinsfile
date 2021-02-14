@@ -36,7 +36,7 @@ pipeline{
             //     }
             // }
             steps {
-                node {
+                script {
                     checkout scm
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-creds-zaki') {
                         builder.push()
