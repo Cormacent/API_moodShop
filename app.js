@@ -15,7 +15,7 @@ server.use(bodyparser.json());
 server.use(morgan('short', { stream: logger.stream }));
 server.use(cors());
 server.use('/public', express.static('public'));
-server.use('/api', routes);
+server.use('/', routes);
 server.get('/health', (req, res) => {
   try {
     res.send('I am very healthy');

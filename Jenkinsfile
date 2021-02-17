@@ -44,5 +44,13 @@ pipeline{
                 }
             }
         }
+        stage("remove unused docker image"){
+            steps{
+                script {
+                    sh 'docker rmi zakimaulana/apimoodshop:master'
+                    sh 'docker rmi registry.hub.docker.com/zakimaulana/apimoodshop:master'
+                }
+            }
+        }
     }
 }
